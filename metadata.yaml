@@ -2,7 +2,7 @@
 Category: "pipeline"
 Description: "a nextflow pipeline to convert between different file formats of mass spectrometry based proteomics studies"
 Maintainers: ["Chenghao Zhu"]
-Contributors: ["Chenghao Zhu", "Lydia Y. Liu", "Brandon L. Tsai"]
+Contributors: []
 Languages: ["Nextflow", "Docker"]
 Dependencies: ["Java", "Nextflow", "Docker"]
 References: ""
