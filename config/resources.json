@@ -1,44 +1,6 @@
 {
-    "f2": {
-        "run_validate_PipeVal": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.5,
-                "max": 1
-            },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.25,
-                "max": "1 GB"
-            }
-        },
-        "run_command_Tool": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.5,
-                "max": 1
-            },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.25,
-                "max": "1 GB"
-            }
-        }
-    },
-    "f8": {
-        "run_validate_PipeVal": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.125,
-                "max": 1
-            },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.06,
-                "max": "1 GB"
-            }
-        },
-        "run_command_Tool": {
+    "default": {
+        "convert_msdata_OpenMS": {
             "cpus": {
                 "min": 2,
                 "fraction": 0.25,
@@ -47,137 +9,67 @@
             "memory": {
                 "min": "4 GB",
                 "fraction": 0.25,
-                "max": "4 GB"
+                "max": "16 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "exponential",
+                    "operand": 2
+                }
             }
-        }
-    },
-    "f16": {
-        "run_validate_PipeVal": {
+        },
+        "convert_msdata_ProteoWizard": {
             "cpus": {
                 "min": 1,
-                "fraction": 0.06,
+                "fraction": 0.10,
                 "max": 1
             },
             "memory": {
-                "min": "1 GB",
-                "fraction": 0.03,
-                "max": "1 GB"
+                "min": "4 GB",
+                "fraction": 0.25,
+                "max": "16 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "exponential",
+                    "operand": 2
+                }
             }
         },
-        "run_command_Tool": {
+        "index_msdata": {
             "cpus": {
-                "min": 4,
+                "min": 2,
+                "fraction": 0.25,
+                "max": 2
+            },
+            "memory": {
+                "min": "4 GB",
+                "fraction": 0.25,
+                "max": "16 GB"
+            },
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "exponential",
+                    "operand": 2
+                }
+            }
+        },
+        "pick_peaks": {
+            "cpus": {
+                "min": 2,
                 "fraction": 0.25,
                 "max": 4
             },
             "memory": {
                 "min": "8 GB",
-                "fraction": 0.25,
-                "max": "8 GB"
-            }
-        }
-    },
-    "f32": {
-        "run_validate_PipeVal": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.03,
-                "max": 1
+                "fraction": 0.50,
+                "max": "32 GB"
             },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.01,
-                "max": "1 GB"
-            }
-        },
-        "run_command_Tool": {
-            "cpus": {
-                "min": 8,
-                "fraction": 0.25,
-                "max": 8
-            },
-            "memory": {
-                "min": "16 GB",
-                "fraction": 0.25,
-                "max": "16 GB"
-            }
-        }
-    },
-    "f72": {
-        "run_validate_PipeVal": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.01,
-                "max": 1
-            },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.01,
-                "max": "1 GB"
-            }
-        },
-        "run_command_Tool": {
-            "cpus": {
-                "min": 18,
-                "fraction": 0.25,
-                "max": 18
-            },
-            "memory": {
-                "min": "36 GB",
-                "fraction": 0.25,
-                "max": "36 GB"
-            }
-        }
-    },
-    "m64": {
-        "run_validate_PipeVal": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.01,
-                "max": 1
-            },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.01,
-                "max": "1 GB"
-            }
-        },
-        "run_command_Tool": {
-            "cpus": {
-                "min": 16,
-                "fraction": 0.25,
-                "max": 16
-            },
-            "memory": {
-                "min": "256 GB",
-                "fraction": 0.25,
-                "max": "256 GB"
-            }
-        }
-    },
-    "default": {
-        "run_validate_PipeVal": {
-            "cpus": {
-                "min": 1,
-                "fraction": 0.01,
-                "max": 1
-            },
-            "memory": {
-                "min": "1 GB",
-                "fraction": 0.01,
-                "max": "1 GB"
-            }
-        },
-        "run_command_Tool": {
-            "cpus": {
-                "min": 2,
-                "fraction": 0.25,
-                "max": 18
-            },
-            "memory": {
-                "min": "4 GB",
-                "fraction": 0.25,
-                "max": "36 GB"
+            "retry_strategy": {
+                "memory": {
+                    "strategy": "exponential",
+                    "operand": 2
+                }
             }
         }
     }

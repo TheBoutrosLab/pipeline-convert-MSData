@@ -1,159 +1,105 @@
-# Pipeline Name
+# pipeline-convert-MSData
 
-[![Prepare release](https://img.shields.io/badge/Action-Create%20New%20Release-blue)](https://github.com/theboutroslab/template-NextflowPipeline/actions/workflows/prepare-release.yaml)
+[![Prepare release](https://img.shields.io/badge/Action-Create%20New%20Release-blue)](https://github.com/TheBoutrosLab/pipeline-convert-MSData/actions/workflows/prepare-release.yaml)
 
-- [Pipeline Name](#pipeline-name)
+- [pipeline-convert-MSData](#pipeline-convert-msdata)
   - [Overview](#overview)
   - [How To Run](#how-to-run)
-  - [Flow Diagram](#flow-diagram)
   - [Pipeline Steps](#pipeline-steps)
-    - [1. Step/Process 1](#1-stepprocess-1)
-    - [2. Step/Process 2](#2-stepprocess-2)
-    - [3. Step/Process n](#3-stepprocess-n)
   - [Inputs](#inputs)
+    - [Input CSV](#input-csv)
+    - [Config](#config)
   - [Outputs](#outputs)
-  - [Testing and Validation](#testing-and-validation)
-    - [Test Data Set](#test-data-set)
-    - [Validation <version number\>](#validation-version-number)
-    - [Validation Tool](#validation-tool)
   - [References](#references)
-  - [Discussions](#discussions)
-  - [Contributors](#contributors)
   - [License](#license)
 ## Overview
 
-A 3-4 sentence summary of the pipeline, including the pipeline's purpose, the type of expected scientific inputs/outputs of the pipeline (e.g: FASTQs and BAMs), and a list of tools/steps in the pipeline.
+This pipeline converts between different data formats of mass spectrometry based proteomics studies. The input data can be either vendor specific raw data or other common file format such as mzML or mzXML. Vendor specific peak picking is supported. When the output format is mzML, it's possible to use OpenMS' peak picking algorithm [PeakPickerHiRes](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerHiRes.html). The resulted centroid mzML files are then ready for downstream analysis such as library searching and/or quantification.
 
 ---
 
 ## How To Run
 
-1. Update the params section of the .config file
+1. Create a `.config` using this template [here](config/template_pwiz.config) for ProteoWizard and this template [here](config/template_openms.config) for OpenMS.
 
-2. Update the input yaml
+2. Create an input CSV file using the template [here](input/template_input.csv)
 
-3. See the submission script, [here](https://github.com/theboutroslab/tool-submit-nf), to submit your pipeline
+3. Run the pipeline with Nextflow, for example:
 
----
+   ```bash
+   nextflow run TheBoutrosLab/pipeline-convert-MSData -r <version> -c config/template_pwiz.config
+   ```
 
-## Flow Diagram
+   The supplied configuration templates default to Docker. Use `-profile apptainer` or `-profile singularity` when appropriate for the execution environment.
 
-A directed acyclic graph of your pipeline. The [PlantUML](https://plantuml.com/) code defining this diagram is version-controlled in the [docs/](./docs/) folder, and a [GitHub Action](https://github.com/theboutroslab/tool-PlantUML-action) automatically regenerates the SVG image when that file is changed.
-
-![Pipeline Graph](./docs/pipeline-flow.svg)
+> :warning: We recommend running one sample or plex at a time because all outputs from a run share the same destination directory.
 
 ---
 
 ## Pipeline Steps
 
-### 1. Step/Process 1
+![alt text](img/flow-diagram.drawio.svg?raw=true)
 
-> A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+The input MS data is converted using either msconvert from ProteoWizard, followed by a call to the `FileConverter` command from OpenMS (which can be turned off by setting `run_index` to `false`). This is to remove errors from files (e.g. the index), to update file formats to new versions, or to check whether information is lost upon reading or writing (see [here](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FileConverter.html)). For mzML, the `PeakPickerHiRes` command from OpenMS can used to convert it into centroid mzML as an alternative to the vendor specific peak picking. However only one pick picking algorithm should run.
 
-### 2. Step/Process 2
-
-> A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
-
-### 3. Step/Process n
-
-> A 2-3 sentence description of each step/proccess in your pipeline that includes the purpose of the step/process, the tool(s) being used and their version, and the expected scientific inputs/outputs (e.g: FASTQs and BAMs) of the pipeline.
+This pipeline supports all file formats that OpenMS and ProteoWizard supports. For OpenMS, find the list of formats [here](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FileConverter.html), and for ProteoWizard [here](https://proteowizard.sourceforge.io/tools.shtml). The `PeakPickerHiRes` from OpenMS only supports output format as mzML.
 
 ---
 
 ## Inputs
 
-### Input YAML
+### Input CSV
 
-> include an example of the organization structure within the YAML. Example:
-```yaml
-input 1: 'patient_id'
-input:
-    normal:
-      - id: <normal id>
-        BAM: </path/to/normal.bam>
-    tumor:
-      - id: <tumor id>
-        BAM: </path/to/tumor.bam>
-```
+| Field  | Required | Description              |
+| ------ | -------- | ------------------------ |
+| `path` | yes      | Path to the input MS file. |
+| `scan` | no       | Path to the MS scan file. Required only when the input files are in Sciex WIFF format. |
 
 ### Config
 
-| Field | Type | Required | Description |
-| ----- | ---- | ------------ | ------------------------ |
-| param 1 | _type_ | yes/no | 1-2 sentence description of the parameter, including any defaults if any. |
-| param 2 | _type_ | yes/no | 1-2 sentence description of the parameter, including any defaults if any. |
-| param n | _type_ | yes/no | 1-2 sentence description of the parameter, including any defaults if any. |
-| `work_dir` | path | no | Path of working directory for Nextflow. When included in the sample config file, Nextflow intermediate files and logs will be saved to this directory. With ucla_cds, the default is `/scratch` and should only be changed for testing/development. Changing this directory to `/hot` or `/tmp` can lead to high server latency and potential disk space limitations, respectively. |
+| Parameter  | Type | Description |
+| ---------- | ---- | ----------- |
+| `input_csv` | string(path) | Path to the input CSV file. |
+| `output_dir` | string(path) | Path to the output directory. |
+| `sample_id` | string | Sample or plex (for TMT) name. |
+| `convert_algorithm` | string | The algorithm used for conversion. Must be either `OpenMS` or `ProteoWizard`. Defaults to `ProteoWizard`. |
+| `output_format` | string | Output format, *e.g.* mzML, mzXML, mgf. |
+| `peak_picking_vendor` | bool | Whether to use vendor peak picking. |
+| `peak_picking_openms` | bool | Whether to run `PeakPickerHiRes`. |
+| `pwiz_extra_args` | string | Extra arguments to be passed to `MSConvert` (*e.g.* '--zlib', '--zlib --64 --inten64'). |
+| `ucla_cds` | bool | Compatibility flag required by the shared work-directory setup. Keep `false` outside the legacy UCLA-CDS environment. |
+| `work_dir` | string(path) | Optional location for Nextflow intermediate files. |
+| `base_resource_update` | namespace | Optional per-process CPU and memory multipliers applied to the default allocations. |
+| `run_index` | bool | Whether to run the indexing step for the output file using OpenMS' `FileConverter` command to clean up and update file version. |
 
-> Include the optional param `work_dir` in the inputs accompanied by a warning of the potentials dangers of using the param. Update the warning if necessary.
+> [!NOTE]
+> We recommend only one of `peak_picking_vendor` or `peak_picking_openms` to be set to true.
+
+> [!WARNING]
+> If the input raw files are in Sciex's WIFF format, `--ignoreUnknownInstrumentError` may have to be added to `pwiz_extra_args` to avoid error from ProteoWizard.
 
 ---
 
 ## Outputs
 
-<!-- List and describe the final output(s) of the pipeline. -->
-
-| Output | Description |
-| ------------ | ------------------------ |
-| ouput 1 | 1 - 2 sentence description of the output. |
-| ouput 2 | 1 - 2 sentence description of the output. |
-| ouput n | 1 - 2 sentence description of the output. |
-
----
-
-## Testing and Validation
-
-### Test Data Set
-
-A 2-3 sentence description of the test data set(s) used to validate and test this pipeline. If possible, include references and links for how to access and use the test dataset
-
-### Validation <version number\>
-
-| Input/Output | Description | Result |
-| ------------ | ------------------------ | ------------------------ |
-| metric 1 | 1 - 2 sentence description of the metric | quantifiable result |
-| metric 2 | 1 - 2 sentence description of the metric | quantifiable result |
-| metric n | 1 - 2 sentence description of the metric | quantifiable result |
-
-- [Reference/External Link/Path 1 to any files/plots or other validation results](<link>)
-- [Reference/External Link/Path 2 to any files/plots or other validation results](<link>)
-- [Reference/External Link/Path n to any files/plots or other validation results](<link>)
-
-### Validation Tool
-
-Included is a template for validating your input files. For more information on the tool check out: https://github.com/theboutroslab/package-PipeVal
+The output files depend on the selected input and output formats. Final files are saved under `<output_dir>/convert-MSData-<version>/<sample_id>/<tool-version>/output/`. Pipeline and process logs are stored in the corresponding timestamped `log-convert-MSData-*` directory.
 
 ---
 
 ## References
 
-1. [Reference 1](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-2. [Reference 2](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-3. [Reference n](<links-to-papers/external-code/documentation/metadata/other-repos/or-anything-else>)
-
----
-
-## Discussions
-
-- [Issue tracker](<link-to-repo-issues-page>) to report errors and enhancement ideas.
-- Discussions can take place in [<pipeline> Discussions](<link-to-repo-discussions-page>)
-- [<pipeline> pull requests](<link-to-repo-pull-requests>) are also open for discussion
-
----
-
-## Contributors
-
-> Update link to repo-specific URL for GitHub Insights Contributors page.
-
-Please see list of [Contributors](https://github.com/theboutroslab/template-NextflowPipeline/graphs/contributors) at GitHub.
+1. Röst et al. OpenMS: A flexible open-source software platform for mass spectrometry data analysis. *Nature Methods*, vol. 13, 2016. doi:10.1038/nmeth.3959
+2. Weisser et al. An Automated Pipeline for High-Throughput Label-Free Quantitative Proteomics. *Journal of Proteome Research*, 2013, 12, 4, 1628–1644. doi.org/10.1021/pr300992u
 
 ---
 
 ## License
 
-[pipeline name] is licensed under the GNU General Public License version 2. See the file LICENSE for the terms of the GNU GPL license.
+pipeline-convert-MSData is licensed under the GNU General Public License version 2. See [LICENSE](LICENSE) for the terms of the GNU GPL license.
 
-<one line to give the program's name and a brief idea of what it does.>
+pipeline-convert-MSData
+
+Convert between different file formats of mass spectrometry based proteomics studies.
 
 Copyright (C) 2026 Sanford Burnham Prebys Medical Discovery Institute ("Boutros Lab")
 

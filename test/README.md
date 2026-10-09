@@ -1,12 +1,12 @@
-# Pipeline Test Files
+# Pipeline tests
 
-The test files in this directory were generated synthetically from a tiny SAM file:
+CSV-based integration tests load the trusted `test/csv_environment_expander.groovy` module, which expands `$NAME` and `${NAME}` references from the environment into a temporary CSV beneath `NXF_WORK`. The pipeline entry point is not involved in this expansion.
 
+Copy `.env-template` to the ignored `.env` file and set the local test-data. Keep the pinned Nextflow version and v1 parser settings; the shared configuration modules are not yet compatible with the v2 parser that became the default in Nextflow 26.04.
+
+```bash
+bash test/run-nftest.sh test-integration-pwiz
 ```
-@HD	VN:1.0	SO:unsorted
-@SQ	SN:chr1	LN:1000
-@RG	ID:sample1	SM:PatientY	LB:lib1	PL:ILLUMINA
-read1	0	chr1	100	60	10M	*	0	0	AAAAAAAAAA	FFFFFFFFFF
-```
 
-FIXME: These files should be removed from any pipelines generated from this template.
+An undefined variable referenced by a test CSV causes the test configuration
+to fail with an explicit error.

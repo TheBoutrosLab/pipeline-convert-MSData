@@ -1,121 +1,47 @@
-#!/usr/bin/env nextflow
+/**
+ * Convert Raw MS data to centroid mzML data
+ */
 
-nextflow.enable.dsl=2
+nextflow.enable.dsl = 2
 
-// Include processes and workflows here
-include { run_validate_PipeVal } from './external/pipeline-Nextflow-module/modules/PipeVal/validate/main.nf'
+include { convert_msdata_OpenMS } from "${projectDir}/modules/convert_msdata_OpenMS"
+include { convert_msdata_ProteoWizard } from "${projectDir}/modules/convert_msdata_ProteoWizard"
+include { index_msdata } from "${projectDir}/modules/index_msdata"
+include { pick_peaks } from "${projectDir}/modules/pick_peaks"
+include { print_prelogue; validate_input_format } from "${projectDir}/modules/common"
 
-include { generate_standard_filename } from './external/pipeline-Nextflow-module/modules/common/generate_standardized_filename/main.nf'
-include { indexFile } from './external/pipeline-Nextflow-module/modules/common/indexFile/main.nf'
+print_prelogue()
 
-// Add this pipeline's custom modules here
-include { run_command_Tool } from './module/EXAMPLE_checksum.nf'
-
-// include { tool_name_command_name } from './module/module-name'
-
-// Log info here
-log.info """\
-        ======================================
-        T E M P L A T E - N F  P I P E L I N E
-        ======================================
-        Boutros Lab
-
-        Current Configuration:
-        - pipeline:
-            name: ${workflow.manifest.name}
-            version: ${workflow.manifest.version}
-
-        - input:
-            input a: ${params.variable_name}
-            ...
-
-        - output:
-            output a: ${params.output_path}
-            ...
-
-        - options:
-            option a: ${params.option_name}
-            ...
-
-        Tools Used:
-            tool a: ${params.docker_image_name}
-
-        ------------------------------------
-        Starting workflow...
-        ------------------------------------
-        """
-        .stripIndent()
-
-// Establish input channels here
-Channel
-    .fromList(params.samples_to_process)
-    .map { sample ->
-        return tuple(sample.id, sample.path, sample.sample_type)
-    }
-    .set { samplesToProcessChannel }
-
-Channel
-    .fromList(params.samples_to_process)
-    .map{ it -> [it['path'], indexFile(it['path'])] }
-    .flatten()
-    .set { files_to_validate_ch }
-
-// These are a few potential channels that can be mixed in
-
-/*
-Channel
-    .from(
-        params.reference,
-        params.reference_index,
-        params.reference_dict
-        )
-    .set { reference_ch }
-
-// Decription of input channel
-Channel
-    .fromPath(params.variable_name)
-    .ifEmpty { error "Cannot find: ${params.variable_name}" }
-    .set { input_ch_variable_name }
-
-files_to_validate_ch = files_to_validate_ch
-    .mix(reference_ch)
-    .mix(input_ch_variable_name)
-*/
-
-// Main workflow here
 workflow {
 
+    raw_ms = Channel.fromPath(params.input_csv).splitCsv(header:true).map{
+        validate_input_format(it.path)
+        msdata = file(it.path)
+        scan_path = it.scan?.trim()
+        if (msdata.extension.equalsIgnoreCase('wiff') && !scan_path) {
+            throw new Exception("A scan companion file is required for WIFF input: ${it.path}")
+        }
+        scan = scan_path ? file(scan_path) : file("${projectDir}/input/NO_SCAN")
+        return tuple(msdata, scan)
+    }
 
-    base_meta = Channel.value([
-        'log_output_dir': params.log_output_dir,
-        'output_dir': params.output_dir_base
-    ])
+    if (params.convert_algorithm == 'OpenMS') {
+        convert_msdata_OpenMS(raw_ms)
+        msdata = convert_msdata_OpenMS.out
+    } else {
+        convert_msdata_ProteoWizard(raw_ms)
+        msdata = convert_msdata_ProteoWizard.out
+    }
 
-    // Validate input files
-    run_validate_PipeVal(
-        base_meta.combine(files_to_validate_ch)
-        )
+    if (params.run_index) {
+        index_msdata(msdata)
+    }
 
-    // Capture validation results
-    run_validate_PipeVal.out.validation_result
-        .collectFile(
-            name: 'input_validation.txt', newLine: true,
-            storeDir: "${params.output_dir_base}/validation"
-        )
-
-    // Add pipeline-specific workflow steps here
-    run_command_Tool(
-        run_validate_PipeVal.out.validated_file
-        )
-
-    /*
-    tool_name_command_name(
-        samplesToProcessChannel,
-        input_ch_variable_name
-        )
-    */
-
-    workflow.onComplete = {
-        WorkflowFinalizer.completeWorkflow(workflow, params);
+    if (params.peak_picking_openms) {
+        if (params.run_index) {
+            pick_peaks(index_msdata.out)
+        } else {
+            pick_peaks(msdata)
+        }
     }
 }
