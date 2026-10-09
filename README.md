@@ -65,7 +65,7 @@ This pipeline supports all file formats that OpenMS and ProteoWizard supports. F
 | `convert_algorithm` | string | The algorithm used for conversion. Must be either `OpenMS` or `ProteoWizard`. Defaults to `ProteoWizard`. |
 | `output_format` | string | Output format, *e.g.* mzML, mzXML, mgf. |
 | `peak_picking_vendor` | bool | Whether to use vendor peak picking. |
-| `peak_picking_openms` | bool | Whether to run `PickPeaksHiRes`. |
+| `peak_picking_openms` | bool | Whether to run `PeakPickerHiRes`. |
 | `pwiz_extra_args` | string | Extra arguments to be passed to `MSConvert` (*e.g.* '--zlib', '--zlib --64 --inten64'). |
 | `ucla_cds` | bool | Compatibility flag required by the shared work-directory setup. Keep `false` outside the legacy UCLA-CDS environment. |
 | `work_dir` | string(path) | Optional location for Nextflow intermediate files. |

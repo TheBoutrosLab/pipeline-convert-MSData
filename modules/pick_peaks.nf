@@ -1,5 +1,5 @@
 /**
- * Run OpenMS PickPicker and generate centroid data
+ * Run OpenMS PeakPickerHiRes and generate centroid data
  */
 
 process pick_peaks {

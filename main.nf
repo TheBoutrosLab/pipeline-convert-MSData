@@ -17,7 +17,11 @@ workflow {
     raw_ms = Channel.fromPath(params.input_csv).splitCsv(header:true).map{
         validate_input_format(it.path)
         msdata = file(it.path)
-        scan = it.scan ? file(it.scan) : file("${projectDir}/input/NO_SCAN")
+        scan_path = it.scan?.trim()
+        if (msdata.extension.equalsIgnoreCase('wiff') && !scan_path) {
+            throw new Exception("A scan companion file is required for WIFF input: ${it.path}")
+        }
+        scan = scan_path ? file(scan_path) : file("${projectDir}/input/NO_SCAN")
         return tuple(msdata, scan)
     }
 

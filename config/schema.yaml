@@ -38,7 +38,7 @@ peak_picking_vendor:
 peak_picking_openms:
   type: Bool
   default: false
-  help: Whether to run `PickPeaksHiRes` from OpenMS.
+  help: Whether to run `PeakPickerHiRes` from OpenMS.
 pwiz_extra_args:
   type: String
   default: ' '
