@@ -1,74 +1,108 @@
 ---
-dataset_id:
-  type: 'String'
+input_csv:
+  type: Path
+  mode: r
   required: true
-  help: 'Dataset identifier'
-patient_id:
-  type: 'String'
-  required: true
-  help: 'Patient identifier'
-sample_id:
-  type: 'String'
-  required: true
-  help: 'Sample identifier'
-param_name:
-  type: 'String'
-  required: false
-  default: 'foo-bar'
-  help: 'Example pipeline parameter; replace with pipeline-specific parameters'
+  help: Path to the input CSV file.
 output_dir:
-  type: 'Path'
-  mode: 'w'
+  type: Path
+  mode: w
   required: true
-  help: 'Absolute path to output directory'
+  help: Output directory.
+sample_id:
+  type: String
+  required: true
+  help: Sample ID
+ucla_cds:
+  type: Bool
+  required: false
+  default: false
+  help: Compatibility flag used by the shared work-directory setup. Keep false outside the legacy UCLA-CDS environment.
+save_intermediate_files:
+  type: Bool
+  default: false
+  help: Whether to save intermediate files. Defaults to `false`.
+  required: false
+convert_algorithm:
+  type: String
+  choices:
+    - ProteoWizard
+    - OpenMS
+  default: ProteoWizard
+  help: The algorithm used for conversion. Must be either 'OpenMS' or 'ProteoWizard'. Defaults to 'ProteoWizard'.
+  required: false
+peak_picking_vendor:
+  type: Bool
+  default: true
+  help: Whether to use vendor peak picking.
+peak_picking_openms:
+  type: Bool
+  default: false
+  help: Whether to run `PickPeaksHiRes` from OpenMS.
+pwiz_extra_args:
+  type: String
+  default: ' '
+  help: Extra arguments to be passed to `MSConvert` (*e.g.* '--zlib', '--zlib --64 --inten64').
+run_index:
+  type: Bool
+  default: true
+  help: Whether to run the indexing step for the output file using OpenMS' `FileConverter` command to clean up and update file version.
+output_format:
+  type: String
+  choices:
+    - mzML
+    - mzXML
+    - mgf
+    - mz5
+    - ms1
+    - cms1
+    - ms2
+    - cms2
+    - cachedMzML
+    - featureXML
+    - consensusXML
+    - edta
+    - mzData
+    - dta2d
+    - csv
+    - sqmass
+  required: true
+  help: Output mass-spectrometry data format.
+work_dir:
+  type: Path
+  mode: w
+  required: false
+  help: Optional path for Nextflow intermediate files.
 apptainer_library:
-  type: 'Path'
-  mode: 'r'
+  type: Path
+  mode: r
   required: false
-  help: 'Absolute path to Apptainer library directory'
+  help: Absolute path to the Apptainer library directory.
 apptainer_cache:
-  type: 'Path'
-  mode: 'w'
+  type: Path
+  mode: w
   required: false
-  help: 'Absolute path to Apptainer cache directory'
+  help: Absolute path to the Apptainer cache directory.
 singularity_library:
-  type: 'Path'
-  mode: 'r'
+  type: Path
+  mode: r
   required: false
-  help: 'Absolute path to Singularity library directory'
+  help: Absolute path to the Singularity library directory.
 singularity_cache:
-  type: 'Path'
-  mode: 'w'
+  type: Path
+  mode: w
   required: false
-  help: 'Absolute path to Singularity cache directory'
+  help: Absolute path to the Singularity cache directory.
 base_resource_update:
-  type: 'ResourceUpdateNamespace'
+  type: ResourceUpdateNamespace
   required: false
-  help: 'User-defined modifications for adjusting base resource allocations for processes'
+  help: User-defined multipliers for adjusting process resource allocations.
   elements:
     memory:
-      type: 'ResourceUpdateList'
+      type: ResourceUpdateList
       required: false
-      help: 'List of memory updates'
+      help: Memory allocation updates.
     cpus:
-      type: 'ResourceUpdateList'
+      type: ResourceUpdateList
       required: false
-      help: 'List of CPU updates'
-input:
-  type: 'InputNamespace'
-  required: true
-  help: 'Input samples'
-  elements:
-    BAM:
-      type: 'InputBAMNamespace'
-      required: true
-      help: 'Input BAM samples grouped by sample type'
-      elements:
-        normal:
-          type: 'BAMEntryList'
-          required: false
-          help: 'Input normal sample'
-        tumor:
-          type: 'BAMEntryList'
-          required: false
-          help: 'Input tumor sample'
+      help: CPU allocation updates.
