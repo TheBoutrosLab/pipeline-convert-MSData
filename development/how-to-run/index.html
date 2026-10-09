@@ -51,10 +51,6 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../flow-diagram/">Flow Diagram</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../pipeline-steps/">Pipeline Steps</a>
                 </li>
               </ul>
@@ -67,19 +63,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../testing-and-validation/">Testing and Validation</a>
-                </li>
-              </ul>
-              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../references/">References</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../discussions/">Discussions</a>
-                </li>
-              </ul>
-              <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../contributors/">Contributors</a>
                 </li>
               </ul>
               <ul>
@@ -102,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/a9be853c97777072f19418fc9f659dbc0daec327/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/c2dee9f145191190956a4dde9964c427d6cbe85c/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -113,22 +97,28 @@
                 <h2 id="how-to-run">How To Run</h2>
 <ol>
 <li>
-<p>Update the params section of the .config file</p>
+<p>Create a <code>.config</code> using this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/c2dee9f145191190956a4dde9964c427d6cbe85c/config/template_pwiz.config">here</a> for ProteoWizard and this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/c2dee9f145191190956a4dde9964c427d6cbe85c/config/template_openms.config">here</a> for OpenMS.</p>
 </li>
 <li>
-<p>Update the input yaml</p>
+<p>Create an input CSV file using the template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/c2dee9f145191190956a4dde9964c427d6cbe85c/input/template_input.csv">here</a></p>
 </li>
 <li>
-<p>See the submission script, <a href="https://github.com/theboutroslab/tool-submit-nf">here</a>, to submit your pipeline</p>
+<p>Run the pipeline with Nextflow, for example:</p>
 </li>
 </ol>
+<p><code>bash
+   nextflow run TheBoutrosLab/pipeline-convert-MSData -r &lt;version&gt; -c config/template_pwiz.config</code></p>
+<p>The supplied configuration templates default to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> when appropriate for the execution environment.</p>
+<blockquote>
+<p>:warning: We recommend running one sample or plex at a time because all outputs from a run share the same destination directory.</p>
+</blockquote>
 <hr />
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../overview/" class="btn btn-neutral float-left" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../flow-diagram/" class="btn btn-neutral float-right" title="Flow Diagram">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../pipeline-steps/" class="btn btn-neutral float-right" title="Pipeline Steps">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -158,7 +148,7 @@
       <span><a href="../overview/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../flow-diagram/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../pipeline-steps/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
