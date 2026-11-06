@@ -32,7 +32,7 @@ This pipeline converts between different data formats of mass spectrometry based
 
    The supplied configuration templates default to Docker. Use `-profile apptainer` or `-profile singularity` when appropriate for the execution environment.
 
-> :warning: We recommend running one sample or plex at a time because all outputs from a run share the same destination directory.
+Each CSV row identifies its sample and fraction. A run can process multiple samples.
 
 ---
 
@@ -52,8 +52,13 @@ This pipeline supports all file formats that OpenMS and ProteoWizard supports. F
 
 | Field  | Required | Description              |
 | ------ | -------- | ------------------------ |
+| `sample_name` | yes | Sample or plex name; used as an output directory. |
+| `fraction_id` | yes | Fraction identifier; included in output filenames. |
 | `path` | yes      | Path to the input MS file. |
 | `scan` | no       | Path to the MS scan file. Required only when the input files are in Sciex WIFF format. |
+
+Each `(sample_name, fraction_id)` pair must be unique in the CSV. Names and IDs
+may contain letters, numbers, underscores, periods, and hyphens.
 
 ### Config
 
@@ -61,7 +66,6 @@ This pipeline supports all file formats that OpenMS and ProteoWizard supports. F
 | ---------- | ---- | ----------- |
 | `input_csv` | string(path) | Path to the input CSV file. |
 | `output_dir` | string(path) | Path to the output directory. |
-| `sample_id` | string | Sample or plex (for TMT) name. |
 | `convert_algorithm` | string | The algorithm used for conversion. Must be either `OpenMS` or `ProteoWizard`. Defaults to `ProteoWizard`. |
 | `output_format` | string | Output format, *e.g.* mzML, mzXML, mgf. |
 | `peak_picking_vendor` | bool | Whether to use vendor peak picking. |
@@ -82,7 +86,7 @@ This pipeline supports all file formats that OpenMS and ProteoWizard supports. F
 
 ## Outputs
 
-The output files depend on the selected input and output formats. Final files are saved under `<output_dir>/convert-MSData-<version>/<sample_id>/<tool-version>/output/`. Pipeline and process logs are stored in the corresponding timestamped `log-convert-MSData-*` directory.
+Final files are saved under `<output_dir>/convert-MSData-<version>/<sample_name>/<tool-version>/output/`. The fraction ID prefixes each converted filename. Pipeline logs for the whole run are stored under the timestamped `log-convert-MSData-*` directory at the version root.
 
 ---
 

@@ -1,3 +1,3 @@
-path,scan
-$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_01.wiff,$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_01.wiff.scan
-$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_02.wiff,$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_02.wiff.scan
+sample_name,fraction_id,path,scan
+SBP0001,f01,$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_01.wiff,$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_01.wiff.scan
+SBP0002,f01,$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_02.wiff,$DATA_DIR/data/van_puyvelde-2022/Protein/DIA/Raw//LFQ_TTOF5600_SWATH_Ecoli_02.wiff.scan

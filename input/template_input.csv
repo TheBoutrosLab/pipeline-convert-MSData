@@ -1,4 +1,4 @@
-path
-/path/to/sample_001_f01.raw
-/path/to/sample_001_f02.raw
-/path/to/sample_001_f03.raw
+sample_name,fraction_id,path
+sample_001,f01,/path/to/sample_001_f01.raw
+sample_001,f02,/path/to/sample_001_f02.raw
+sample_002,f01,/path/to/sample_002_f01.raw

@@ -1,5 +1,9 @@
 # Pipeline tests
 
+The integration CSVs use `sample_name,fraction_id,path` and an optional `scan`
+column for WIFF inputs. The WIFF test includes two samples to exercise
+sample-specific output directories.
+
 CSV-based integration tests load the trusted `test/csv_environment_expander.groovy` module, which expands `$NAME` and `${NAME}` references from the environment into a temporary CSV beneath `NXF_WORK`. The pipeline entry point is not involved in this expansion.
 
 Copy `.env-template` to the ignored `.env` file and set the local test-data. Keep the pinned Nextflow version and v1 parser settings; the shared configuration modules are not yet compatible with the v2 parser that became the default in Nextflow 26.04.
