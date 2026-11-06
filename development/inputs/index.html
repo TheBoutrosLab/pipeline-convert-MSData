@@ -90,7 +90,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Inputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/00a307c79d49f907504d2155ca51a5f4507623a6/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/8bfbfbcf2415ea6023054d75c3fe8a935dec7818/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -110,6 +110,16 @@
 </thead>
 <tbody>
 <tr>
+<td><code>sample_name</code></td>
+<td>yes</td>
+<td>Sample or plex name; used as an output directory.</td>
+</tr>
+<tr>
+<td><code>fraction_id</code></td>
+<td>yes</td>
+<td>Fraction identifier; included in output filenames.</td>
+</tr>
+<tr>
 <td><code>path</code></td>
 <td>yes</td>
 <td>Path to the input MS file.</td>
@@ -121,6 +131,8 @@
 </tr>
 </tbody>
 </table>
+<p>Each <code>(sample_name, fraction_id)</code> pair must be unique in the CSV. Names and IDs
+may contain letters, numbers, underscores, periods, and hyphens.</p>
 <h3 id="config">Config</h3>
 <table>
 <thead>
@@ -140,11 +152,6 @@
 <td><code>output_dir</code></td>
 <td>string(path)</td>
 <td>Path to the output directory.</td>
-</tr>
-<tr>
-<td><code>sample_id</code></td>
-<td>string</td>
-<td>Sample or plex (for TMT) name.</td>
 </tr>
 <tr>
 <td><code>convert_algorithm</code></td>

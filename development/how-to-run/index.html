@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/00a307c79d49f907504d2155ca51a5f4507623a6/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/8bfbfbcf2415ea6023054d75c3fe8a935dec7818/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -97,10 +97,10 @@
                 <h2 id="how-to-run">How To Run</h2>
 <ol>
 <li>
-<p>Create a <code>.config</code> using this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/00a307c79d49f907504d2155ca51a5f4507623a6/config/template_pwiz.config">here</a> for ProteoWizard and this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/00a307c79d49f907504d2155ca51a5f4507623a6/config/template_openms.config">here</a> for OpenMS.</p>
+<p>Create a <code>.config</code> using this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/8bfbfbcf2415ea6023054d75c3fe8a935dec7818/config/template_pwiz.config">here</a> for ProteoWizard and this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/8bfbfbcf2415ea6023054d75c3fe8a935dec7818/config/template_openms.config">here</a> for OpenMS.</p>
 </li>
 <li>
-<p>Create an input CSV file using the template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/00a307c79d49f907504d2155ca51a5f4507623a6/input/template_input.csv">here</a></p>
+<p>Create an input CSV file using the template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/8bfbfbcf2415ea6023054d75c3fe8a935dec7818/input/template_input.csv">here</a></p>
 </li>
 <li>
 <p>Run the pipeline with Nextflow, for example:</p>
@@ -109,9 +109,7 @@
 <p><code>bash
    nextflow run TheBoutrosLab/pipeline-convert-MSData -r &lt;version&gt; -c config/template_pwiz.config</code></p>
 <p>The supplied configuration templates default to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> when appropriate for the execution environment.</p>
-<blockquote>
-<p>:warning: We recommend running one sample or plex at a time because all outputs from a run share the same destination directory.</p>
-</blockquote>
+<p>Each CSV row identifies its sample and fraction. A run can process multiple samples.</p>
 <hr />
               
             </div>
