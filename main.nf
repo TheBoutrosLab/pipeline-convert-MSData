@@ -14,15 +14,31 @@ print_prelogue()
 
 workflow {
 
+    def seen_fractions = [] as Set
     raw_ms = Channel.fromPath(params.input_csv).splitCsv(header:true).map{
-        validate_input_format(it.path)
-        msdata = file(it.path)
+        sample_name = it.sample_name?.trim()
+        fraction_id = it.fraction_id?.trim()
+        input_path = it.path?.trim()
+        if (!sample_name || !(sample_name ==~ /[A-Za-z0-9][A-Za-z0-9_.-]*/)) {
+            throw new IllegalArgumentException("Invalid or missing sample_name in input CSV: ${it}")
+        }
+        if (!fraction_id || !(fraction_id ==~ /[A-Za-z0-9][A-Za-z0-9_.-]*/)) {
+            throw new IllegalArgumentException("Invalid or missing fraction_id in input CSV: ${it}")
+        }
+        if (!input_path) {
+            throw new IllegalArgumentException("Missing path in input CSV for ${sample_name}/${fraction_id}")
+        }
+        if (!seen_fractions.add([sample_name, fraction_id])) {
+            throw new IllegalArgumentException("Duplicate sample_name/fraction_id in input CSV: ${sample_name}/${fraction_id}")
+        }
+        validate_input_format(input_path)
+        msdata = file(input_path)
         scan_path = it.scan?.trim()
         if (msdata.extension.equalsIgnoreCase('wiff') && !scan_path) {
-            throw new Exception("A scan companion file is required for WIFF input: ${it.path}")
+            throw new Exception("A scan companion file is required for WIFF input: ${input_path}")
         }
         scan = scan_path ? file(scan_path) : file("${projectDir}/input/NO_SCAN")
-        return tuple(msdata, scan)
+        return tuple([sample_name: sample_name, fraction_id: fraction_id], msdata, scan)
     }
 
     if (params.convert_algorithm == 'OpenMS') {
