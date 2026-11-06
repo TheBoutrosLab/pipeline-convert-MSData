@@ -5,7 +5,9 @@ All notable changes to `pipeline-convert-MSData` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-11-06
+## [Unreleased]
+
+## [1.1.0] - 2026-11-06
 
 ### Added
 
@@ -33,3 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added environment-variable expansion for integration-test CSV files and a
   Slurm scratch-directory test runner.
 - Added pipeline metadata, parameter schema, documentation, and workflow diagram.
+
+[1.0.0]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/releases/tag/v1.0.0
+[1.1.0]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.0.0...v1.1.0
+[unreleased]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.0...HEAD
