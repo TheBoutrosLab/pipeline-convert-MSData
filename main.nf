@@ -14,31 +14,51 @@ print_prelogue()
 
 workflow {
 
-    def seen_fractions = [] as Set
-    raw_ms = Channel.fromPath(params.input_csv).splitCsv(header:true).map{
-        sample_name = it.sample_name?.trim()
-        fraction_id = it.fraction_id?.trim()
-        input_path = it.path?.trim()
-        if (!sample_name || !(sample_name ==~ /[A-Za-z0-9][A-Za-z0-9_.-]*/)) {
-            throw new IllegalArgumentException("Invalid or missing sample_name in input CSV: ${it}")
+    raw_ms = Channel.fromPath(params.input_csv).splitCsv(header:true).toList().flatMap { rows ->
+        if (!rows || !(['sample_name', 'fraction_id', 'path'].every { rows[0].containsKey(it) })) {
+            throw new IllegalArgumentException('Input CSV must contain sample_name, fraction_id, and path columns and at least one row')
         }
-        if (!fraction_id || !(fraction_id ==~ /[A-Za-z0-9][A-Za-z0-9_.-]*/)) {
-            throw new IllegalArgumentException("Invalid or missing fraction_id in input CSV: ${it}")
+
+        def seen_fractions = [] as Set
+        def validated_rows = rows.collect { row ->
+            def sample_name = row.sample_name?.trim()
+            def fraction_id = row.fraction_id?.trim()
+            def input_path = row.path?.trim()
+            if (!sample_name || !(sample_name ==~ /[A-Za-z0-9][A-Za-z0-9_.-]*/)) {
+                throw new IllegalArgumentException("Invalid or missing sample_name in input CSV: ${row}")
+            }
+            if (!fraction_id || !(fraction_id ==~ /[A-Za-z0-9][A-Za-z0-9_.-]*/)) {
+                throw new IllegalArgumentException("Invalid or missing fraction_id in input CSV: ${row}")
+            }
+            if (!input_path) {
+                throw new IllegalArgumentException("Missing path in input CSV for ${sample_name}/${fraction_id}")
+            }
+            if (!seen_fractions.add([sample_name, fraction_id])) {
+                throw new IllegalArgumentException("Duplicate sample_name/fraction_id in input CSV: ${sample_name}/${fraction_id}")
+            }
+            validate_input_format(input_path)
+            def msdata = file(input_path)
+            def scan_path = row.scan?.trim()
+            if (msdata.extension.equalsIgnoreCase('wiff') && !scan_path) {
+                throw new IllegalArgumentException("A scan companion file is required for WIFF input: ${input_path}")
+            }
+            [sample_name: sample_name, fraction_id: fraction_id, msdata: msdata,
+             scan: scan_path ? file(scan_path) : file("${projectDir}/input/NO_SCAN")]
         }
-        if (!input_path) {
-            throw new IllegalArgumentException("Missing path in input CSV for ${sample_name}/${fraction_id}")
+
+        def basename_counts = validated_rows.countBy { [it.sample_name, it.msdata.baseName] }
+        def suffix_all_fractions = basename_counts.values().any { it > 1 }
+        def output_names = [] as Set
+        validated_rows.collect { row ->
+            def input_basename = row.msdata.baseName
+            def output_basename = suffix_all_fractions
+                ? "${input_basename}_${row.fraction_id}" : input_basename
+            if (!output_names.add([row.sample_name, output_basename])) {
+                throw new IllegalArgumentException("Duplicate output basename for ${row.sample_name}: ${output_basename}")
+            }
+            tuple([sample_name: row.sample_name, fraction_id: row.fraction_id,
+                   output_basename: output_basename], row.msdata, row.scan)
         }
-        if (!seen_fractions.add([sample_name, fraction_id])) {
-            throw new IllegalArgumentException("Duplicate sample_name/fraction_id in input CSV: ${sample_name}/${fraction_id}")
-        }
-        validate_input_format(input_path)
-        msdata = file(input_path)
-        scan_path = it.scan?.trim()
-        if (msdata.extension.equalsIgnoreCase('wiff') && !scan_path) {
-            throw new Exception("A scan companion file is required for WIFF input: ${input_path}")
-        }
-        scan = scan_path ? file(scan_path) : file("${projectDir}/input/NO_SCAN")
-        return tuple([sample_name: sample_name, fraction_id: fraction_id], msdata, scan)
     }
 
     if (params.convert_algorithm == 'OpenMS') {

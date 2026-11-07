@@ -5,7 +5,13 @@ All notable changes to `pipeline-convert-MSData` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased] - 2026-11-07
+
+### Fixed
+
+- Preserve input basenames when they are unique within every sample. If any
+  sample has an overlapping basename, append fraction IDs to all outputs in the
+  experiment and retain the chosen names through indexing and peak picking.
 
 ## [1.1.0] - 2026-11-06
 

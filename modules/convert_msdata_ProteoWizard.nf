@@ -27,7 +27,8 @@ process convert_msdata_ProteoWizard {
         tuple val(meta), path(output_file)
 
     script:
-    output_file = "${meta.fraction_id}_${input_msdata.baseName}.${params.output_format}"
+    output_file = "${meta.output_basename}.${params.output_format}"
+    temporary_file = "converted_${output_file}"
     peak_picking_vendor = params.peak_picking_vendor ? '--filter "peakPicking true 1-"' : ''
     """
     set -euo pipefail
@@ -35,11 +36,12 @@ process convert_msdata_ProteoWizard {
     wine msconvert \\
         ${input_msdata} \\
         -o . \\
-        --outfile ${output_file} \\
+        --outfile ${temporary_file} \\
         --${params.output_format} \\
         ${peak_picking_vendor} \\
         --filter "titleMaker <RunId>.<ScanNumber>.<ScanNumber>.<ChargeState>" \\
         ${params.pwiz_extra_args}
+    mv -- ${temporary_file} ${output_file}
     if [ "\$(id -u)" -eq 0 ]; then
         chown "\$(stat -c '%u' ${input_msdata})":"\$(stat -c '%g' ${input_msdata})" ${output_file}
     fi
