@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">Outputs</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/f53a01b428353b29627a04e1eea6bc8314f556bb/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/b85486b80160e1daab78d65ae1a5e95511420bf0/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -95,7 +95,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="outputs">Outputs</h2>
-<p>Final files are saved under <code>&lt;output_dir&gt;/convert-MSData-&lt;version&gt;/&lt;sample_name&gt;/&lt;tool-version&gt;/output/</code>. The fraction ID prefixes each converted filename. Pipeline logs for the whole run are stored under the timestamped <code>log-convert-MSData-*</code> directory at the version root.</p>
+<p>Final files are saved under <code>&lt;output_dir&gt;/convert-MSData-&lt;version&gt;/&lt;sample_name&gt;/&lt;tool-version&gt;/output/</code>. If input basenames are unique within every sample, each file retains its original basename: <code>LFQ_Orbitrap_AIF_Ecoli_01.raw</code> becomes <code>LFQ_Orbitrap_AIF_Ecoli_01.mzML</code>. If any sample contains overlapping input basenames, every file in the CSV receives a <code>_&lt;fraction_id&gt;</code> suffix, including files from other samples, so naming is consistent across the experiment. Indexing and peak picking retain the chosen basename. The pipeline rejects any remaining output-name collision. Downstream tools must recognize suffixed names when they occur. Pipeline logs for the whole run are stored under the timestamped <code>log-convert-MSData-*</code> directory at the version root.</p>
 <hr />
               
             </div>
