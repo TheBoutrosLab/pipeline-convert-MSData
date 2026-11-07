@@ -53,7 +53,7 @@ This pipeline supports all file formats that OpenMS and ProteoWizard supports. F
 | Field  | Required | Description              |
 | ------ | -------- | ------------------------ |
 | `sample_name` | yes | Sample or plex name; used as an output directory. |
-| `fraction_id` | yes | Fraction identifier; included in output filenames. |
+| `fraction_id` | yes | Fraction identifier; appended to every output basename if any sample has overlapping input basenames. |
 | `path` | yes      | Path to the input MS file. |
 | `scan` | no       | Path to the MS scan file. Required only when the input files are in Sciex WIFF format. |
 
@@ -86,7 +86,7 @@ may contain letters, numbers, underscores, periods, and hyphens.
 
 ## Outputs
 
-Final files are saved under `<output_dir>/convert-MSData-<version>/<sample_name>/<tool-version>/output/`. The fraction ID prefixes each converted filename. Pipeline logs for the whole run are stored under the timestamped `log-convert-MSData-*` directory at the version root.
+Final files are saved under `<output_dir>/convert-MSData-<version>/<sample_name>/<tool-version>/output/`. If input basenames are unique within every sample, each file retains its original basename: `LFQ_Orbitrap_AIF_Ecoli_01.raw` becomes `LFQ_Orbitrap_AIF_Ecoli_01.mzML`. If any sample contains overlapping input basenames, every file in the CSV receives a `_<fraction_id>` suffix, including files from other samples, so naming is consistent across the experiment. Indexing and peak picking retain the chosen basename. The pipeline rejects any remaining output-name collision. Downstream tools must recognize suffixed names when they occur. Pipeline logs for the whole run are stored under the timestamped `log-convert-MSData-*` directory at the version root.
 
 ---
 

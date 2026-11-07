@@ -17,11 +17,14 @@ process pick_peaks {
         tuple val(meta), path(centroid_msdata)
 
     script:
-    centroid_msdata = "${msdata.baseName}_centroid.mzML"
+    centroid_msdata = "${meta.output_basename}.mzML"
+    temporary_file = "centroid_${centroid_msdata}"
     """
+    set -euo pipefail
     PeakPickerHiRes \
         -in ${msdata} \
-        -out ${centroid_msdata} \
+        -out ${temporary_file} \
         -threads ${task.cpus}
+    mv -- ${temporary_file} ${centroid_msdata}
     """
 }

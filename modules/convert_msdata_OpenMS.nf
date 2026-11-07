@@ -26,15 +26,17 @@ process convert_msdata_OpenMS {
         tuple val(meta), path(output_file)
 
     script:
-    output_file = "${meta.fraction_id}_${input_msdata.baseName}.${params.output_format}"
+    output_file = "${meta.output_basename}.${params.output_format}"
+    temporary_file = "converted_${output_file}"
     peak_picking_vendor = params.peak_picking_vendor ? '' : '-no_peak_picking'
     """
     set -euo pipefail
 
     FileConverter \\
         -in ${input_msdata} \\
-        -out ${output_file} \\
+        -out ${temporary_file} \\
         ${peak_picking_vendor} \\
         -threads ${task.cpus}
+    mv -- ${temporary_file} ${output_file}
     """
 }

@@ -22,11 +22,14 @@ process index_msdata {
         tuple val(meta), path(indexed_msdata)
 
     script:
-    indexed_msdata = "${msdata.baseName}_indexed.${params.output_format}"
+    indexed_msdata = "${meta.output_basename}.${params.output_format}"
+    temporary_file = "indexed_${indexed_msdata}"
     """
+    set -euo pipefail
     FileConverter \
         -in ${msdata} \
-        -out ${indexed_msdata} \
+        -out ${temporary_file} \
         -threads ${task.cpus}
+    mv -- ${temporary_file} ${indexed_msdata}
     """
 }
