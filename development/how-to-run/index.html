@@ -86,7 +86,7 @@
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">How To Run</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/262f7bb3e8e3ed45be0354c8c87fe330552c6bd7/README.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/f2232a57e32a62fd9d89bd6082b1cfaf3b2bd394/README.md" class="icon icon-github"> Edit on GitHub</a>
     </li>
   </ul>
   <hr/>
@@ -96,20 +96,38 @@
               
                 <h2 id="how-to-run">How To Run</h2>
 <ol>
-<li>
-<p>Create a <code>.config</code> using this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/262f7bb3e8e3ed45be0354c8c87fe330552c6bd7/config/template_pwiz.config">here</a> for ProteoWizard and this template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/262f7bb3e8e3ed45be0354c8c87fe330552c6bd7/config/template_openms.config">here</a> for OpenMS.</p>
-</li>
-<li>
-<p>Create an input CSV file using the template <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/blob/262f7bb3e8e3ed45be0354c8c87fe330552c6bd7/input/template_input.csv">here</a></p>
-</li>
-<li>
-<p>Run the pipeline with Nextflow, for example:</p>
-</li>
+<li>Download <code>source_code_with_submodules.tar.gz</code> from the <a href="https://github.com/TheBoutrosLab/pipeline-convert-MSData/releases">release assets</a>. This archive includes the pipeline's submodules.</li>
 </ol>
 <p><code>bash
-   nextflow run TheBoutrosLab/pipeline-convert-MSData -r &lt;version&gt; -c config/template_pwiz.config</code></p>
-<p>The supplied configuration templates default to Docker. Use <code>-profile apptainer</code> or <code>-profile singularity</code> when appropriate for the execution environment.</p>
-<p>Each CSV row identifies its sample and fraction. A run can process multiple samples.</p>
+   tar -xzf source_code_with_submodules.tar.gz</code></p>
+<p>You can also clone the repository with its submodules.</p>
+<p><code>bash
+   git clone --recurse-submodules https://github.com/TheBoutrosLab/pipeline-convert-MSData.git</code></p>
+<p>For an existing Git checkout, run <code>git submodule update --init --recursive</code> from the repository root. Run the following steps from the directory containing <code>pipeline-convert-MSData/</code>.</p>
+<ol>
+<li>Copy the ProteoWizard configuration and input CSV templates.</li>
+</ol>
+<p><code>bash
+   cp pipeline-convert-MSData/config/template_pwiz.config run.config
+   cp pipeline-convert-MSData/input/template_input.csv input.csv</code></p>
+<p>Edit <code>input.csv</code> with your sample names, fraction IDs, and input paths.
+   Set <code>input_csv</code> and <code>output_dir</code> in <code>run.config</code> to your CSV path and desired
+   output directory. Keep the <code>includeConfig</code> lines and <code>methods.setup()</code> call.
+   For OpenMS conversion, use <code>config/template_openms.config</code> instead.</p>
+<ol>
+<li>Use the supported Nextflow version and parser. These settings must be exported when launching Nextflow directly.</li>
+</ol>
+<p><code>bash
+   export NXF_VER=24.10.6
+   export NXF_SYNTAX_PARSER=v1</code></p>
+<ol>
+<li>Run from the directory containing <code>pipeline-convert-MSData/</code> with your edited configuration. Choose the profile for your installed container runtime.</li>
+</ol>
+<p><code>bash
+   nextflow run pipeline-convert-MSData/main.nf -c run.config -profile docker</code></p>
+<p>Use <code>apptainer</code> profile to use apptainer instead of docker.</p>
+<p><code>bash
+   nextflow run pipeline-convert-MSData/main.nf -c run.config -profile apptainer</code></p>
 <hr />
               
             </div>
