@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Moved the ProteoWizard stack limit and writable Wine prefix setup into the
+  Apptainer profile for use across clusters, replacing the Pines profile.
+- Updated Pines integration tests to select only the `apptainer` profile.
+- Clarified release tarball downloads, configuration setup, and local run commands.
+
 ## [1.1.2] - 2026-11-17
 
 ### Added
