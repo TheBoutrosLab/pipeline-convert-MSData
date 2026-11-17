@@ -33,9 +33,8 @@ def prepare_config(repo: Path, test_case: str, test_dir: Path, cluster: str) -> 
     test_dir.mkdir(parents=True, exist_ok=True)
     if cluster == "pines":
         profiles = list(matches[0].get("profiles") or [])
-        for profile in ("apptainer", "pines"):
-            if profile not in profiles:
-                profiles.append(profile)
+        if "apptainer" not in profiles:
+            profiles.append("apptainer")
         matches[0]["profiles"] = profiles
         config_path = test_dir / "nftest.yml"
         config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")

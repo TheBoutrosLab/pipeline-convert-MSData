@@ -23,8 +23,7 @@ writable shared directory). On Blarc, the effective run root is
 `$NFT_RUN_ROOT/$SLURM_JOB_ID`; on Pines, it is exactly `$NFT_RUN_ROOT`.
 NFTest places final pipeline results under `<run-root>/<test-case>/`, logs under
 `<run-root>/`, and temporary Nextflow files under
-`<run-root>/.nftest-temp/<test-case>/work/`. Pines tests use the `apptainer` and
-`pines` Nextflow profiles automatically.
+`<run-root>/.nftest-temp/<test-case>/work/`. Pines tests use the `apptainer` Nextflow profile automatically.
 
 ```bash
 python3 test/run-nftest.py test-integration-pwiz

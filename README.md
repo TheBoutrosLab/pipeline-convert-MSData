@@ -20,19 +20,50 @@ This pipeline converts between different data formats of mass spectrometry based
 
 ## How To Run
 
-1. Create a `.config` using this template [here](config/template_pwiz.config) for ProteoWizard and this template [here](config/template_openms.config) for OpenMS.
+1. Download `source_code_with_submodules.tar.gz` from the [release assets](https://github.com/TheBoutrosLab/pipeline-convert-MSData/releases). This archive includes the pipeline's submodules.
 
-2. Create an input CSV file using the template [here](input/template_input.csv)
+    ```bash
+    tar -xzf source_code_with_submodules.tar.gz
+    ```
 
-3. Run the pipeline with Nextflow, for example:
+    You can also clone the repository with its submodules.
 
-   ```bash
-   nextflow run TheBoutrosLab/pipeline-convert-MSData -r <version> -c config/template_pwiz.config
-   ```
+    ```bash
+    git clone --recurse-submodules https://github.com/TheBoutrosLab/pipeline-convert-MSData.git
+    ```
 
-   The supplied configuration templates default to Docker. Use `-profile apptainer` or `-profile singularity` when appropriate for the execution environment.
+    For an existing Git checkout, run `git submodule update --init --recursive` from the repository root. Run the following steps from the directory containing `pipeline-convert-MSData/`.
 
-Each CSV row identifies its sample and fraction. A run can process multiple samples.
+2. Copy the ProteoWizard configuration and input CSV templates.
+
+    ```bash
+    cp pipeline-convert-MSData/config/template_pwiz.config run.config
+    cp pipeline-convert-MSData/input/template_input.csv input.csv
+    ```
+
+    Edit `input.csv` with your sample names, fraction IDs, and input paths.
+    Set `input_csv` and `output_dir` in `run.config` to your CSV path and desired
+    output directory. Keep the `includeConfig` lines and `methods.setup()` call.
+    For OpenMS conversion, use `config/template_openms.config` instead.
+
+3. Use the supported Nextflow version and parser. These settings must be exported when launching Nextflow directly.
+
+    ```bash
+    export NXF_VER=24.10.6
+    export NXF_SYNTAX_PARSER=v1
+    ```
+
+4. Run from the directory containing `pipeline-convert-MSData/` with your edited configuration. Choose the profile for your installed container runtime.
+
+    ```bash
+    nextflow run pipeline-convert-MSData/main.nf -c run.config -profile docker
+    ```
+
+    Use `apptainer` profile to use apptainer instead of docker.
+
+    ```bash
+    nextflow run pipeline-convert-MSData/main.nf -c run.config -profile apptainer
+    ```
 
 ---
 
