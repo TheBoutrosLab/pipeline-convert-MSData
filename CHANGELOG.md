@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-11-17
+
 ### Added
 
 - Added a Pines execution profile with an 8 MiB stack limit to allow Wine to
@@ -66,4 +68,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.0]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/releases/tag/v1.0.0
 [1.1.0]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.0.0...v1.1.0
 [1.1.1]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.0...v1.1.1
-[unreleased]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.1...HEAD
+[1.1.2]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.1...v1.1.2
+[unreleased]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.2...HEAD
