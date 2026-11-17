@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added a Pines execution profile with an 8 MiB stack limit to allow Wine to
+  start ([#13](https://github.com/TheBoutrosLab/pipeline-convert-MSData/issues/13))
+  and a separate writable Wine prefix for each ProteoWizard task to enable
+  RAW conversion ([#14](https://github.com/TheBoutrosLab/pipeline-convert-MSData/issues/14)).
+
+### Changed
+
+- Replaced the Bash NFTest launcher with a Python launcher that runs NFTest
+  using the active Python environment.
+- Added configurable test storage through `NFT_RUN_ROOT`, including relative
+  paths, and optional cluster selection through `NFT_CLUSTER`. Blarc runs add
+  the Slurm job ID directory, while Pines runs select the `apptainer,pines`
+  profiles automatically. Runs without a cluster selection use the configured
+  root directly.
+- Renamed the integration-test data variable to `TEST_DATA_DIR` and updated
+  inputs to use the `ecoli_lfq` and `ecoli_swath` dataset directories.
+
 ## [1.1.1] - 2026-11-07
 
 ### Fixed
