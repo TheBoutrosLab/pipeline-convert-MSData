@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-11-17
+
 ### Changed
 
 - Moved the ProteoWizard stack limit and writable Wine prefix setup into the
@@ -76,4 +78,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.1.0]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.0.0...v1.1.0
 [1.1.1]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.0...v1.1.1
 [1.1.2]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.1...v1.1.2
-[unreleased]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.2...HEAD
+[1.1.3]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.2...v1.1.3
+[unreleased]: https://github.com/TheBoutrosLab/pipeline-convert-MSData/compare/v1.1.3...HEAD
