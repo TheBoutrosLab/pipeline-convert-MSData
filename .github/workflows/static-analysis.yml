@@ -12,6 +12,8 @@ on:
 jobs:
   static-analysis:
     runs-on: ubuntu-latest
+    env:
+      PYLINTRC: .pylintrc
 
     steps:
       - uses: TheBoutrosLab/tool-static-analysis@v1

@@ -65,11 +65,13 @@ def run_test(repo: Path, test_case: str, root: Path, cluster: str) -> int:
         [sys.executable, "-m", "nftest", "run", "-c", config_path, test_case],
         cwd=test_dir,
         env=env,
+        check=False,
     )
     return result.returncode if result.returncode >= 0 else 128 - result.returncode
 
 
 def main() -> int:
+    """Parse launcher arguments and report configuration errors."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("test_case")
     args = parser.parse_args()
@@ -82,7 +84,9 @@ def main() -> int:
         root = resolve_run_root(repo, cluster)
         return run_test(repo, args.test_case, root, cluster)
     except (ValueError, OSError, yaml.YAMLError) as error:
-        parser.error(str(error))
+        parser.print_usage(file=sys.stderr)
+        print(f"{parser.prog}: error: {error}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":
